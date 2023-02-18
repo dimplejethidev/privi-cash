@@ -6,6 +6,28 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "protocol#build": {
+      "env": [
+        "RPC_POLYGON_MUMBAI",
+        "RPC_POLYGON_MAINNET",
+        "RPC_GOERLI",
+        "RPC_GNOSIS_CHIADO",
+        "PRIVATE_KEYS_TEST",
+        "HARDHAT_FORK"
+      ]
+    },
+    "web#build": {
+      "env": [
+        "NODE_ENV",
+        "NEXT_PUBLIC_RPC_GOERLI",
+        "NEXT_PUBLIC_RPC_POLYGON_MAINNET",
+        "NEXT_PUBLIC_RPC_POLYGON_MUMBAI",
+        "NEXT_PUBLIC_RPC_GNOSIS_CHIADO",
+        "NEXT_PUBLIC_TEST_PRIVATE_KEY",
+        "NEXT_PUBLIC_TEST_SHIELDED_PRIVATE_KEY_1",
+        "NEXT_PUBLIC_TEST_SHIELDED_PRIVATE_KEY_2"
+      ]
+    },
     "lint": {
       "outputs": []
     },

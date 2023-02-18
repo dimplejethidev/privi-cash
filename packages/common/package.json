@@ -1,0 +1,35 @@
+{
+  "name": "@privi-cash/common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha -r ts-node/register ./**/*.test.ts",
+    "postinstall": "yarn build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "ethers": "^5.7.2",
+    "@metamask/eth-sig-util": "^5.0.0",
+    "fixed-merkle-tree": "^0.7.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.0",
+    "chai": "^4.3.7",
+    "eslint": "7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "mocha": "^10.1.0",
+    "ts-node": "^10.9.1",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.9.3"
+  }
+}
