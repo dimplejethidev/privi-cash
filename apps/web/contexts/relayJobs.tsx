@@ -1,5 +1,5 @@
 // import { relayersRegistry } from 'config/network';
-import useInstance from 'hooks/instance';
+// import useInstance from 'hooks/instance';
 import useLocalStorage from 'hooks/localStorage';
 import { createContext, FC, PropsWithChildren, useCallback, useContext, useMemo } from 'react';
 

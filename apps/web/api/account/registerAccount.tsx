@@ -5,7 +5,7 @@ import registrar from 'abi/registrar.json';
 import { registrarAddress } from 'config/network';
 import logger from 'utils/logger';
 
-export const useRegisterAccount = () => {
+export const useRegisterAccount = (): ReturnType<typeof useContractWrite> => {
   const txRes = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: registrarAddress,
