@@ -10,23 +10,21 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (!deployerSigner) {
     throw new Error('No deployer signer found');
   }
+  const chainId = await getChainId();
 
   const allDeployments = await deployments.all();
   const hasher = allDeployments[`${network.name}-hasher`].address;
   const verifier2 = allDeployments[`${network.name}-verifier2`].address;
   const verifier16 = allDeployments[`${network.name}-verifier16`].address;
-
-  const chainId = await getChainId();
-
   //@todo Get token from cmd line
   const token = Object.keys(networks[chainId].tokens)[0];
+  const deploymentName = `${network.name}-${token}-poolProxy`;
 
   const tokenAddress = networks[chainId].tokens[token].address;
   const numLevels = networks[chainId].tokens[token].numTreeLevels;
   const sanctionsList = networks[chainId].sanctionsList;
   const maxDepositAmount = networks[chainId].tokens[token].maxDepositAmount;
 
-  const deploymentName = `${network.name}-${token}-poolProxy`;
   const PoolImplFactory = await ethers.getContractFactory('Pool', deployerSigner);
   const pool = await upgrades.deployProxy(PoolImplFactory, [maxDepositAmount], {
     kind: 'uups',
