@@ -127,6 +127,32 @@ export const estimateGas = async ({ proofArgs, extData }: any, pool: Contract) =
   return estimate;
 };
 
+export const calculateRelayerFee = ({
+  amount,
+  gasPrice,
+}: {
+  amount?: BigNumber;
+  gasPrice: BigNumber;
+}) => {
+  // const { feePercent, fixedFee } = relayer;
+  const gasFee = gasPrice.mul(2_000_000);
+  let serviceFee: BigNumber = BigNumber.from(0);
+  // if (!amount || amount.isZero()) {
+  //   // Assume a Transfer
+  //   serviceFee = BigNumber.from(fixedFee);
+  // } else {
+  //   // Assumes a Withdraw
+  //   serviceFee = amount.mul(feePercent * 10e6).div(10e6);
+  // }
+
+  const totalFee = serviceFee.add(gasFee);
+  return {
+    serviceFee,
+    gasFee,
+    totalFee,
+  };
+};
+
 // export const calculateRelayerFee = ({
 //   amount,
 //   gasPrice,

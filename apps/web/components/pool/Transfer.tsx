@@ -7,11 +7,13 @@ import * as yup from 'yup';
 import { FormWithdrawAmountInput, FormTextInput, FormSelect } from 'components/form';
 import logger from 'utils/logger';
 import { usePoolTransfer } from 'api/pool';
-import { parseEther } from 'privi-utils';
+import { parseEther, parseUnits } from 'privi-utils';
 import { isDev } from 'config/env';
 import useToast from 'hooks/toast';
 import { useInstance } from 'contexts/instance';
 import TxSummary from './TxSummary';
+import { useRelayTransfer } from 'api/relayer';
+import { useRelayers } from 'contexts/relayJobs';
 
 const schema = yup.object().shape({
   amount: yup.number().typeError('Invalid number').positive('Invalid number').required('Required'),
@@ -35,12 +37,35 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
   const { transferAsync, testAsync } = usePoolTransfer({
     poolAddress: instance?.pool,
   });
+  const {
+    data: relayData,
+    error: relayError,
+    relayTransferAsync,
+  } = useRelayTransfer({ poolAddress: instance?.pool });
   const { control, handleSubmit, setValue, getValues, watch } = useForm<ITransferInput>({
     resolver: yupResolver(schema),
     defaultValues: { amount: 0.01, recipient: address },
   });
+  const { saveJob } = useRelayers();
 
   const [amount, txMethod] = watch(['amount', 'txMethod']);
+
+  useEffect(() => {
+    if (relayError) {
+      logger.error('Error', relayError);
+      showErrorToast({ description: 'Error relaying transaction' });
+      return;
+    }
+
+    if (!relayData) return;
+    const jobData = {
+      id: relayData.id,
+      type: 'transfer',
+      amount: parseUnits(`${amount}`, instance?.decimals).toString(),
+    };
+    saveJob(jobData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [relayData]);
 
   useEffect(() => {
     const v = getValues('recipient');
@@ -53,7 +78,17 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
   const submit = (data: ITransferInput) => {
     logger.info('Transfer', data);
     setLoading(true);
-    startTransfer(data)
+
+    let promise;
+    if (txMethod === 'relayer') {
+      logger.info('Sending via relayer...');
+      promise = startRelayTransfer(data);
+    } else {
+      logger.info('Sending via wallet...');
+      promise = startTransfer(data);
+    }
+
+    promise
       .then(() => {
         logger.info('Tx Sent');
       })
@@ -69,6 +104,11 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
   const startTransfer = async (data: ITransferInput) => {
     const amount = parseEther(`${data.amount}`);
     await transferAsync(amount, data.recipient);
+  };
+
+  const startRelayTransfer = async (data: ITransferInput) => {
+    const amount = parseEther(`${data.amount}`);
+    await relayTransferAsync(amount, data.recipient);
   };
 
   const simulateTest = async () => {
@@ -94,7 +134,7 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
         <VStack as="form" alignItems="stretch" spacing={4} onSubmit={handleSubmit(submit)}>
           <FormWithdrawAmountInput
             name="amount"
-            label="Enter Amount"
+            label="Token Amount"
             control={control}
             instance={instance}
           />

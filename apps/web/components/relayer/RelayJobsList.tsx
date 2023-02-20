@@ -10,17 +10,17 @@ const RelayJobsList: FC<IRelayJobsListProps> = ({ ...props }) => {
 
   return (
     <Box p={4} {...props}>
-      <Heading fontSize="2xl" color="brand.500" py={2}>
+      <Heading fontSize="2xl" color="brand.500" textAlign="center" py={2}>
         Relay Jobs
       </Heading>
-      <VStack alignItems="stretch" overflowY="scroll" maxH="80vh">
-        {jobs.length === 0 && (
+      <VStack alignItems="stretch" maxH="80vh" rounded="md" w="full">
+        {jobs?.length === 0 && (
           <Box textAlign="center" py={16}>
             No Jobs Yet!
           </Box>
         )}
 
-        {jobs.map((job: any) => (
+        {jobs?.map((job: any) => (
           <Box key={job.id} px={2}>
             <RelayJobItem job={job} onRemove={removeJob} />
             <Divider />

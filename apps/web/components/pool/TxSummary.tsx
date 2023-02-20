@@ -1,7 +1,8 @@
 import { FC } from 'react';
 import { Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react';
 import { useFeeData } from 'wagmi';
-import { formatEther, parseEther } from 'privi-utils';
+import { BN, formatEther, parseEther } from 'privi-utils';
+import { calculateRelayerFee } from 'utils/pool';
 
 interface ITxFeeInfoProps extends StackProps {
   txMethod: string;
@@ -11,23 +12,18 @@ interface ITxFeeInfoProps extends StackProps {
 
 const TxSummary: FC<ITxFeeInfoProps> = ({ txMethod, amount, isAmountPublic = true, ...props }) => {
   const { data: feeData } = useFeeData();
-  //   const { relayersList } = useRelayers();
 
   const isRelay = txMethod === 'relayer';
-
-  //   const relayer =
-  //     relayersList.find((rel: any) => rel.url === relayerUrl) || (relayersList[0] as Relayer);
-
   const amountWei = parseEther(`${amount || 0}`);
-  const { serviceFee, gasFee, totalFee } = { serviceFee: 0, gasFee: 0, totalFee: 0 };
-  //   const { serviceFee, gasFee, totalFee } = calculateRelayerFee({
-  //     amount: isAmountPublic ? amountWei : undefined,
-  //     relayer,
-  //     gasPrice: BigNumber.from(feeData?.gasPrice || 0),
-  //   });
+  const { serviceFee, gasFee, totalFee } = calculateRelayerFee({
+    amount: isAmountPublic ? amountWei : undefined,
+    gasPrice: BN(feeData?.gasPrice || 0),
+  });
 
   let total = amountWei;
-  if (isRelay) total = total.add(totalFee);
+  if (isRelay) {
+    total = total.add(totalFee);
+  }
 
   return (
     <VStack fontSize="sm" alignItems="stretch" {...props}>

@@ -4,7 +4,7 @@ import { Card, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-u
 import { Layout } from 'components/common/layout';
 import logger from 'utils/logger';
 import { DepositNative, WithdrawNative, Transfer } from 'components/pool';
-// import { RelayJobsList } from 'components/relayer';
+import { RelayJobsList } from 'components/relayer';
 
 const Home: NextPage = () => {
   return (
@@ -32,32 +32,8 @@ const Home: NextPage = () => {
             </TabPanels>
           </Tabs>
         </Card>
-      </HStack>
-
-      {/* <HStack py={16} justify="space-around" alignItems="flex-start" px={2}>
-        <Card w={450} flex={0.45} maxW="lg">
-          <Tabs isFitted>
-            <TabList>
-              <Tab>Deposit</Tab>
-              <Tab>Withdraw</Tab>
-              <Tab>Transfer</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <DepositForm />
-              </TabPanel>
-              <TabPanel>
-                <WithdrawForm />
-              </TabPanel>
-              <TabPanel>
-                <TransferForm />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </Card>
-
         <RelayJobsList flex={0.45} />
-      </HStack> */}
+      </HStack>
     </Layout>
   );
 };

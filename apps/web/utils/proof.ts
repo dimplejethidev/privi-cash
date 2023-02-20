@@ -81,11 +81,15 @@ export const prepareWithdrawProof = async ({
   pool,
   from,
   amount,
+  fee = 0,
+  relayer = 0,
   recipient,
 }: {
   pool: Contract;
   from: KeyPair;
   amount: BigNumberish;
+  fee?: BigNumberish;
+  relayer?: BigNumberish;
   recipient: string;
 }) => {
   //@ts-ignore
@@ -97,7 +101,7 @@ export const prepareWithdrawProof = async ({
   const inputsSum = inputNotes.reduce((acc, note) => acc.add(note.amount), BN(0));
   logger.info(`Current UTXOs: Count ${inputNotes.length} Sum: ${formatEther(inputsSum)}`);
 
-  const outputsSum = inputsSum.sub(amount);
+  const outputsSum = inputsSum.sub(amount).sub(fee);
   if (outputsSum.isNegative()) {
     throw new Error('Not enough balance');
   }
@@ -116,9 +120,9 @@ export const prepareWithdrawProof = async ({
     txType: 'withdraw',
     inputs: inputNotes,
     outputs: outputNotes,
+    fee,
+    relayer,
     recipient,
-    fee: 0,
-    relayer: 0,
   });
 
   return { proofArgs, extData };
@@ -129,11 +133,15 @@ export const prepareTransferProof = async ({
   from,
   to,
   amount,
+  fee = 0,
+  relayer = 0,
 }: {
   pool: Contract;
   from: KeyPair;
   to: KeyPair;
   amount: BigNumberish;
+  fee?: BigNumberish;
+  relayer?: BigNumberish;
 }) => {
   //@ts-ignore
   const snarkJs = window.snarkjs;
@@ -144,7 +152,7 @@ export const prepareTransferProof = async ({
   const inputsSum = inputNotes.reduce((acc, note) => acc.add(note.amount), BN(0));
   logger.info(`Current UTXOs: Count ${inputNotes.length} Sum: ${formatEther(inputsSum)}`);
 
-  const fromOutputsSum = inputsSum.sub(amount);
+  const fromOutputsSum = inputsSum.sub(amount).sub(fee);
   if (fromOutputsSum.isNegative()) {
     throw new Error('Not enough balance');
   }
@@ -165,8 +173,8 @@ export const prepareTransferProof = async ({
     txType: 'transfer',
     inputs: inputNotes,
     outputs: outputNotes,
-    fee: 0,
-    relayer: 0,
+    fee,
+    relayer,
     recipient: 0,
   });
 

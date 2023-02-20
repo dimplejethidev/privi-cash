@@ -10,6 +10,11 @@ export const keyAlchemyGoerli = rpcGoerli.split('/').pop() as string;
 export const keyAlchemyPolygonMainnet = rpcPolygonMainnet.split('/').pop() as string;
 export const keyAlchemyPolygonMumbai = rpcPolygonMumbai.split('/').pop() as string;
 
+export const relayerBaseUrl = isDev
+  ? 'http://localhost:4000/api/v1'
+  : (process.env.NEXT_PUBLIC_RELAYER_BASE_URL as string);
+export const relayerAddress = '0xE6D21Ad1Ea84177F365aEcdDa15573916B548943';
+
 export const testPrivateKey =
   env === 'development' ? (process.env.NEXT_PUBLIC_TEST_PRIVATE_KEY as string) : '';
 

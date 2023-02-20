@@ -66,7 +66,7 @@ const polygonMumbaiConfig: InstanceConfig = {
   wTokenGateway: '0xb91682AB65Fb9e70cD619BFFd8FB045020Fb6de0',
   instances: {
     matic: {
-      pool: '0x71f23bb6418ec79fE638bE776804Fb9101042Fac',
+      pool: '0x28a37a8d3078162EA2109852a2835949A382AE12',
       deployedBlock: 28876158,
       treeHeight: 20,
       zeroElement: ZERO_LEAF,
@@ -80,7 +80,7 @@ const polygonMumbaiConfig: InstanceConfig = {
       },
     },
     wmatic: {
-      pool: '0x71f23bb6418ec79fE638bE776804Fb9101042Fac',
+      pool: '0x28a37a8d3078162EA2109852a2835949A382AE12',
       deployedBlock: 28876158,
       treeHeight: 20,
       zeroElement: ZERO_LEAF,
@@ -89,7 +89,7 @@ const polygonMumbaiConfig: InstanceConfig = {
         name: 'wmatic',
         symbol: 'WMATIC',
         decimals: 18,
-        isNative: true,
+        isNative: false,
         iconUrl: '/images/matic.png',
       },
     },
@@ -105,7 +105,7 @@ export const blockExplorers = {
   [chains.GOERLI]: 'https://goerli.etherscan.io',
   [chains.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
   [chains.POLYGON_MAINNET]: 'https://polygonscan.com',
-  [chains.GNOSIS_CHIADO]: 'https://chiado.gnosis-safe.io',
+  [chains.GNOSIS_CHIADO]: 'https://blockscout.chiadochain.net',
 };
 
 // export const registrarAddress = '0x80Ca34172fFA772Bc22E7C92E8e0aa5098E02216';

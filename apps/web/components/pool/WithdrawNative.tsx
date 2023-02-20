@@ -7,11 +7,13 @@ import * as yup from 'yup';
 import { FormWithdrawAmountInput, FormTextInput, FormSelect } from 'components/form';
 import logger from 'utils/logger';
 import { usePoolWithdrawNative } from 'api/pool';
-import { parseEther } from 'privi-utils';
+import { parseEther, parseUnits } from 'privi-utils';
 import { isDev } from 'config/env';
 import useToast from 'hooks/toast';
 import { useInstance } from 'contexts/instance';
 import TxSummary from './TxSummary';
+import { useRelayWithdraw } from 'api/relayer';
+import { useRelayers } from 'contexts/relayJobs';
 
 const schema = yup.object().shape({
   amount: yup.number().typeError('Invalid number').positive('Invalid number').required('Required'),
@@ -31,16 +33,39 @@ const WithdrawNative: FC<StackProps> = ({ ...props }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const { showErrorToast } = useToast();
   const { address } = useAccount();
-  const { instance } = useInstance();
+  const { instance, chainId } = useInstance();
   const { withdrawAsync, testAsync } = usePoolWithdrawNative({
     poolAddress: instance?.pool,
   });
+  const {
+    data: relayData,
+    error: relayError,
+    relayWithdrawAsync,
+  } = useRelayWithdraw({ poolAddress: instance?.pool });
   const { control, handleSubmit, setValue, getValues, watch } = useForm<IWithdrawInput>({
     resolver: yupResolver(schema),
     defaultValues: { amount: 0.01, recipient: address },
   });
+  const { saveJob } = useRelayers();
 
   const [amount, txMethod] = watch(['amount', 'txMethod']);
+
+  useEffect(() => {
+    if (relayError) {
+      logger.error('Error', relayError);
+      showErrorToast({ description: 'Error relaying transaction' });
+      return;
+    }
+
+    if (!relayData) return;
+    const jobData = {
+      id: relayData.id,
+      type: 'withdraw',
+      amount: parseUnits(`${amount}`, instance?.decimals).toString(),
+    };
+    saveJob(jobData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [relayData]);
 
   useEffect(() => {
     const v = getValues('recipient');
@@ -53,7 +78,17 @@ const WithdrawNative: FC<StackProps> = ({ ...props }) => {
   const submit = (data: IWithdrawInput) => {
     logger.info('WithdrawNative', data);
     setLoading(true);
-    startWithdraw(data)
+
+    let promise;
+    if (txMethod === 'relayer') {
+      logger.info('Sending via relayer...');
+      promise = startRelayWithdraw(data);
+    } else {
+      logger.info('Sending via wallet...');
+      promise = startWithdraw(data);
+    }
+
+    promise
       .then(() => {
         logger.info('Tx Sent');
       })
@@ -69,6 +104,11 @@ const WithdrawNative: FC<StackProps> = ({ ...props }) => {
   const startWithdraw = async (data: IWithdrawInput) => {
     const amount = parseEther(`${data.amount}`);
     await withdrawAsync(amount, data.recipient);
+  };
+
+  const startRelayWithdraw = async (data: IWithdrawInput) => {
+    const amount = parseEther(`${data.amount}`);
+    await relayWithdrawAsync(amount, data.recipient);
   };
 
   const simulateTest = async () => {
@@ -94,7 +134,7 @@ const WithdrawNative: FC<StackProps> = ({ ...props }) => {
         <VStack as="form" alignItems="stretch" spacing={4} onSubmit={handleSubmit(submit)}>
           <FormWithdrawAmountInput
             name="amount"
-            label="Enter Amount"
+            label="Token Amount"
             control={control}
             instance={instance}
           />

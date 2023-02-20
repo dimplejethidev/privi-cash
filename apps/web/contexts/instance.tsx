@@ -25,7 +25,7 @@ export const InstanceProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const config = instanceConfig[chainId];
     const token = Object.keys(config.instances)[0];
-    return { ...config, instance: config.instances[token] };
+    return { ...config, instance: config.instances[token], chainId };
   }, [chain]);
 
   return <InstanceContext.Provider value={value}>{children}</InstanceContext.Provider>;
