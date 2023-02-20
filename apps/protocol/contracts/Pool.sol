@@ -137,7 +137,7 @@ contract Pool is
         } else if (txType == TxType.WITHDRAW) {
             publicAmount = FIELD_SIZE - (extAmount + fee);
         } else if (txType == TxType.TRANSFER) {
-            publicAmount = fee;
+            publicAmount = fee == 0 ? 0 : FIELD_SIZE - fee;
         } else {
             revert("Invalid TxType");
         }
