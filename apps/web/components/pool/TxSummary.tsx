@@ -1,8 +1,9 @@
 import { FC } from 'react';
-import { Divider, HStack, StackProps, Text, VStack } from '@chakra-ui/react';
+import { Box, Divider, HStack, StackProps, Text, Tooltip, VStack } from '@chakra-ui/react';
 import { useFeeData } from 'wagmi';
 import { BN, formatEther, parseEther } from 'privi-utils';
 import { calculateRelayerFee } from 'utils/pool';
+import { InfoIcon } from 'components/icons';
 
 interface ITxFeeInfoProps extends StackProps {
   txMethod: string;
@@ -32,7 +33,14 @@ const TxSummary: FC<ITxFeeInfoProps> = ({ txMethod, amount, isAmountPublic = tru
         <Text fontWeight="medium">{formatEther(amountWei)}</Text>
       </HStack>
       <HStack w="full" justify="space-between">
-        <Text fontWeight="medium">Service Fee</Text>
+        <HStack>
+          <Text fontWeight="medium">Service Fee</Text>
+          <Tooltip hasArrow label="Privi charges 0.0% service fee for every transaction">
+            <Box>
+              <InfoIcon color="gray" />
+            </Box>
+          </Tooltip>
+        </HStack>
         <Text fontWeight="medium">{isRelay ? formatEther(serviceFee) : '-'}</Text>
       </HStack>
       <HStack w="full" justify="space-between">

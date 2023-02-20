@@ -15,3 +15,4 @@ export { FiCopy as CopyIcon } from 'react-icons/fi';
 export { BiTimeFive as TimeIcon } from 'react-icons/bi';
 export { BiCheckCircle as CheckCircleIcon } from 'react-icons/bi';
 export { FiLogOut as LogOutIcon } from 'react-icons/fi';
+export { MdInfo as InfoIcon } from 'react-icons/md';

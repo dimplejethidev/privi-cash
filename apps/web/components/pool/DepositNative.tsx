@@ -88,7 +88,12 @@ const DepositNative: FC<StackProps> = ({ ...props }) => {
             control={control}
             instance={instance}
           />
-          <FormTextInput label="Recipient's Address" name="recipient" control={control} />
+          <FormTextInput
+            label="Recipient's Address"
+            name="recipient"
+            control={control}
+            helperText="You can either enter your address to shield your asset or other receiver’s shielded address to directly transfer asset in single click"
+          />
           <Button type="submit" isLoading={isLoading}>
             Deposit
           </Button>
