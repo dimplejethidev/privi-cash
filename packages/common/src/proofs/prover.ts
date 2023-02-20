@@ -35,16 +35,23 @@ export class TxProver {
       outputs.push(Utxo.zero());
     }
 
+    // extData.amount
     let amount: BigNumber;
     if (txType === 'deposit') {
-      amount = BigNumber.from(fee)
-        .add(outputs.reduce((sum, x) => sum.add(x.amount), BigNumber.from(0)))
+      // fee = 0
+      amount = outputs
+        .reduce((sum, x) => sum.add(x.amount), BigNumber.from(0))
         .sub(inputs.reduce((sum, x) => sum.add(x.amount), BigNumber.from(0)));
-    } else {
+    } else if (txType === 'withdraw') {
       amount = inputs
         .reduce((sum, x) => sum.add(x.amount), BigNumber.from(0))
         .sub(outputs.reduce((sum, x) => sum.add(x.amount), BigNumber.from(0)))
         .sub(BigNumber.from(fee));
+    } else if (txType === 'transfer') {
+      // No external amount
+      amount = BigNumber.from(0);
+    } else {
+      throw new Error('Incorrect txType');
     }
 
     const { proofArgs, extData } = await this.generateProof({
@@ -105,7 +112,10 @@ export class TxProver {
     } else if (txType === 'withdraw') {
       publicAmount = BigNumber.from(this.fieldSize).sub(BigNumber.from(amount).add(fee));
     } else if (txType === 'transfer') {
-      publicAmount = BigNumber.from(fee);
+      const feeBN = BigNumber.from(fee);
+      publicAmount = feeBN.isZero()
+        ? feeBN
+        : BigNumber.from(this.fieldSize).sub(BigNumber.from(fee));
     } else {
       throw new Error(`Invalid txType: ${txType}`);
     }
