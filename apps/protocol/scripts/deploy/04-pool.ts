@@ -25,6 +25,8 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const sanctionsList = networks[chainId].sanctionsList;
   const maxDepositAmount = networks[chainId].tokens[token].maxDepositAmount;
 
+  //@todo check possibility to skip
+
   const PoolImplFactory = await ethers.getContractFactory('Pool', deployerSigner);
   const pool = await upgrades.deployProxy(PoolImplFactory, [maxDepositAmount], {
     kind: 'uups',

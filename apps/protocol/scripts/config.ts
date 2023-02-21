@@ -17,10 +17,10 @@ type NetworkInstances = {
 const goerli: NetworkInstances = {
   chainId: '5',
   nativeWToken: 'weth',
-  sanctionsList: '0x40C57923924B5c5c5455c48D93317139ADDaC8fb',
+  sanctionsList: '0xAAB8Bd495Ae247DF6798A60b7f9c52e15dCb071b',
   tokens: {
     weth: {
-      address: '0xCCB14936C2E000ED8393A571D15A2672537838Ad',
+      address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
       maxDepositAmount: parseEther('1'),
       numTreeLevels: 20,
     },
