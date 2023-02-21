@@ -32,7 +32,7 @@ const Home: NextPage = () => {
             </TabPanels>
           </Tabs>
         </Card>
-        <RelayJobsList flex={0.45} />
+        {/* <RelayJobsList flex={0.45} /> */}
       </HStack>
     </Layout>
   );
