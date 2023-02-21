@@ -2,10 +2,8 @@ import { useContract, useProvider } from 'wagmi';
 import pool from 'abi/pool.json';
 import registrar from 'abi/registrar.json';
 import wTokenGateway from 'abi/wTokenGateway.json';
-import { registrarAddress } from 'config/network';
 import { Contract } from 'ethers';
 import { useInstance } from 'contexts/instance';
-// import useInstance from './instance';
 
 export const usePoolContract = ({ poolAddress }: { poolAddress: string }) => {
   const provider = useProvider();
@@ -28,6 +26,7 @@ export const useWTokenGatewayContract = () => {
 
 export const useRegistrarContract = () => {
   const provider = useProvider();
+  const { registrar: registrarAddress } = useInstance();
   return useContract({
     address: registrarAddress,
     abi: registrar.abi,
