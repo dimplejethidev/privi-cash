@@ -16,7 +16,7 @@ interface IRelayJobItemProps extends StackProps {
 const RelayJobItem: FC<IRelayJobItemProps> = ({ job, onRemove, ...props }) => {
   const { data, isLoading, isError } = useGetRelayJobStatus(job);
   const { updateJob } = useRelayers();
-  const { instances } = useInstance();
+  const { getInstance } = useInstance();
 
   useEffect(() => {
     if (!data?.status) return;
@@ -24,7 +24,7 @@ const RelayJobItem: FC<IRelayJobItemProps> = ({ job, onRemove, ...props }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.status, job.id]);
 
-  const instance = instances[job.token];
+  const instance = getInstance(job.chainId, job.token);
 
   return (
     <VStack alignItems="stretch" p={2} fontSize="sm" spacing={1} {...props}>

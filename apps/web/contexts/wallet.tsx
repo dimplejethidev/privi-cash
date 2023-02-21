@@ -1,15 +1,10 @@
 import { FC, PropsWithChildren } from 'react';
 import { getDefaultWallets, lightTheme, RainbowKitProvider, Chain } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { goerli, polygonMumbai, polygon } from 'wagmi/chains';
+import { goerli, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import {
-  keyAlchemyGoerli,
-  keyAlchemyPolygonMumbai,
-  keyAlchemyPolygonMainnet,
-  rpcGnosisChiado,
-} from 'config/env';
+import { keyAlchemyGoerli, keyAlchemyPolygonMumbai, rpcGnosisChiado } from 'config/env';
 import { APP_NAME } from 'config/constants';
 import fonts from 'theme/fonts';
 import { defaultChainId } from 'config/network';
@@ -25,17 +20,15 @@ const chiadoChain: Chain = {
 };
 
 const defaultChains: Chain[] = [
-  // { ...polygon, iconUrl: '/images/matic.png' },
   chiadoChain,
   { ...polygonMumbai, iconUrl: '/images/matic.png' },
-  // { ...goerli, iconUrl: '/images/eth.png' },
+  { ...goerli, iconUrl: '/images/eth.png' },
 ];
 
 const { chains, provider } = configureChains(defaultChains, [
-  // alchemyProvider({ apiKey: keyAlchemyPolygonMainnet }),
-  alchemyProvider({ apiKey: keyAlchemyPolygonMumbai }),
-  // alchemyProvider({ apiKey: keyAlchemyGoerli }),
   jsonRpcProvider({ rpc: () => ({ http: rpcGnosisChiado }) }),
+  alchemyProvider({ apiKey: keyAlchemyPolygonMumbai }),
+  alchemyProvider({ apiKey: keyAlchemyGoerli }),
 ]);
 
 const { connectors } = getDefaultWallets({

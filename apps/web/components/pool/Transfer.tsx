@@ -125,7 +125,7 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
 
   const txMethodOptions = [
     { label: 'Wallet', value: 'wallet' },
-    { label: 'Relayer', value: 'relayer' },
+    // { label: 'Relayer', value: 'relayer' },
   ];
 
   return (

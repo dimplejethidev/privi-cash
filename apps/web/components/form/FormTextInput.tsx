@@ -9,8 +9,10 @@ import {
   FormErrorMessage,
   HStack,
   Box,
+  Tooltip,
 } from '@chakra-ui/react';
 import { Control, useController } from 'react-hook-form';
+import { InfoIcon } from 'components/icons';
 
 interface FormInputProps extends FormControlProps {
   name: string;
@@ -57,8 +59,15 @@ const FormTextInput: FC<FormInputProps> = ({
       bgColor="gray.50"
       {...props}
     >
-      <HStack justify="space-between" alignItems="center" pt={2} px={4}>
+      <HStack alignItems="center" spacing={0} pt={2} px={4}>
         <FormLabel fontWeight="semibold">{label}</FormLabel>
+        {helperText && (
+          <Tooltip hasArrow label={helperText}>
+            <Box pb={2}>
+              <InfoIcon color="gray" />
+            </Box>
+          </Tooltip>
+        )}
       </HStack>
 
       <Box bgColor="white" alignItems="center" rounded="md" px={4} py={2}>
