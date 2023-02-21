@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Contract } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useRegistrarContract } from 'hooks/contracts';
-
 import { KeyPair } from '@privi-cash/common';
 
 export async function getShieldedAccount(address: string, registrar: Contract) {
