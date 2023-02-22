@@ -14,6 +14,7 @@ import { useInstance } from 'contexts/instance';
 import TxSummary from './TxSummary';
 import { useRelayWithdraw } from 'api/relayer';
 import { useRelayers } from 'contexts/relayJobs';
+import { ConnectWalletButton } from 'components/wallet';
 
 const schema = yup.object().shape({
   amount: yup.number().typeError('Invalid number').positive('Invalid number').required('Required'),
@@ -21,6 +22,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^(0x)?([A-Fa-f0-9]{40})$/, 'Invalid Address')
     .required('Required'),
+  txMethod: yup.string().required('Required'),
 });
 
 interface IWithdrawInput {
@@ -32,7 +34,7 @@ interface IWithdrawInput {
 const WithdrawNative: FC<StackProps> = ({ ...props }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const { showErrorToast } = useToast();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { instance, chainId } = useInstance();
   const { withdrawAsync, testAsync } = usePoolWithdrawNative({
     poolAddress: instance?.pool,
@@ -44,7 +46,7 @@ const WithdrawNative: FC<StackProps> = ({ ...props }) => {
   } = useRelayWithdraw({ poolAddress: instance?.pool });
   const { control, handleSubmit, setValue, getValues, watch } = useForm<IWithdrawInput>({
     resolver: yupResolver(schema),
-    defaultValues: { amount: 0.01, recipient: address },
+    defaultValues: { amount: 0.01, recipient: address, txMethod: 'wallet' },
   });
   const { saveJob } = useRelayers();
 
@@ -128,6 +130,8 @@ const WithdrawNative: FC<StackProps> = ({ ...props }) => {
     // { label: 'Relayer', value: 'relayer' },
   ];
 
+  const showConnectWallet = !isConnected; //&& txMethod !== 'relayer';
+
   return (
     <VStack alignItems="stretch" spacing={6} {...props}>
       <Box px={4}>
@@ -152,9 +156,13 @@ const WithdrawNative: FC<StackProps> = ({ ...props }) => {
             <TxSummary txMethod={txMethod} amount={amount} />
           </VStack>
 
-          <Button type="submit" isLoading={isLoading}>
-            Withdraw
-          </Button>
+          {showConnectWallet ? (
+            <ConnectWalletButton />
+          ) : (
+            <Button type="submit" isLoading={isLoading}>
+              Withdraw
+            </Button>
+          )}
 
           {isDev && (
             <Button onClick={simulateTest} isLoading={isLoading} colorScheme="orange">

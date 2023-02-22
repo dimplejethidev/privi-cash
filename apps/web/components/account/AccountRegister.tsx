@@ -107,7 +107,7 @@ const AccountRegister: FC<StackProps> = ({ ...props }) => {
           disabled={!hasAgreed}
           alignSelf="stretch"
         >
-          Register
+          Set up Account
         </Button>
       </Box>
     </VStack>
