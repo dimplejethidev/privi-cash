@@ -11,6 +11,7 @@ import { parseEther } from 'privi-utils';
 import { isDev } from 'config/env';
 import useToast from 'hooks/toast';
 import { useInstance } from 'contexts/instance';
+import { ConnectWalletButton } from 'components/wallet';
 
 const schema = yup.object().shape({
   amount: yup.number().typeError('Invalid number').positive('Invalid number').required('Required'),
@@ -28,7 +29,7 @@ interface IDepositInput {
 const DepositNative: FC<StackProps> = ({ ...props }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const { showErrorToast } = useToast();
-  const { address } = useAccount();
+  const { address, isConnected: isWalletConnected } = useAccount();
   const { instance } = useInstance();
   const { depositAsync, testAsync } = usePoolDepositNative({
     poolAddress: instance?.pool,
@@ -94,9 +95,14 @@ const DepositNative: FC<StackProps> = ({ ...props }) => {
             control={control}
             helperText="You can either enter your address to shield your asset or other receiver’s shielded address to directly transfer asset in single click"
           />
-          <Button type="submit" isLoading={isLoading}>
-            Deposit
-          </Button>
+
+          {isWalletConnected ? (
+            <Button type="submit" isLoading={isLoading}>
+              Deposit
+            </Button>
+          ) : (
+            <ConnectWalletButton />
+          )}
 
           {isDev && (
             <Button onClick={simulateTest} isLoading={isLoading} colorScheme="orange">

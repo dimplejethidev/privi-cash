@@ -14,6 +14,7 @@ import { useInstance } from 'contexts/instance';
 import TxSummary from './TxSummary';
 import { useRelayTransfer } from 'api/relayer';
 import { useRelayers } from 'contexts/relayJobs';
+import { ConnectWalletButton } from 'components/wallet';
 
 const schema = yup.object().shape({
   amount: yup.number().typeError('Invalid number').positive('Invalid number').required('Required'),
@@ -32,7 +33,7 @@ interface ITransferInput {
 const Transfer: FC<StackProps> = ({ ...props }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const { showErrorToast } = useToast();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { instance } = useInstance();
   const { transferAsync, testAsync } = usePoolTransfer({
     poolAddress: instance?.pool,
@@ -128,6 +129,8 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
     // { label: 'Relayer', value: 'relayer' },
   ];
 
+  const showConnectWallet = !isConnected; //&& txMethod !== 'relayer';
+
   return (
     <VStack alignItems="stretch" spacing={6} {...props}>
       <Box px={4}>
@@ -152,9 +155,13 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
             <TxSummary txMethod={txMethod} amount={amount} />
           </VStack>
 
-          <Button type="submit" isLoading={isLoading}>
-            Transfer
-          </Button>
+          {showConnectWallet ? (
+            <ConnectWalletButton />
+          ) : (
+            <Button type="submit" isLoading={isLoading}>
+              Transfer
+            </Button>
+          )}
 
           {isDev && (
             <Button onClick={simulateTest} isLoading={isLoading} colorScheme="orange">
