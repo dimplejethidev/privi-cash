@@ -108,7 +108,7 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
           </VStack>
         ) : (
           <Box>
-            <VStack alignItems="stretch" alignSelf="stretch" pb={8}>
+            <VStack alignItems="stretch" alignSelf="stretch">
               <HStack
                 as="button"
                 justify="space-between"
@@ -149,23 +149,16 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
               </HStack>
             </VStack>
 
-            <VStack alignItems="stretch" textAlign="center" spacing={4}>
-              <Center position="relative">
-                <Divider position="absolute" top={0} bottom={0} left={0} right={0} my="auto" />
-                <Text position="relative" textAlign="center" bg="white" px={2}>
-                  Or set up a new account
-                </Text>
-              </Center>
+            {isLoading && <Skeleton h={10} w="full" rounded="md" mt={4} />}
 
-              {isRegistered && (
-                <Text color="gray.400" fontSize="sm">
-                  Connected wallet already set up. Log In!
-                </Text>
-              )}
-
-              {isLoading && <Skeleton h={10} w="full" rounded="md" />}
-
-              {!isRegistered && !isLoading && (
+            {!isRegistered && !isLoading && (
+              <VStack alignItems="stretch" textAlign="center" pt={6} spacing={4}>
+                <Center position="relative">
+                  <Divider position="absolute" top={0} bottom={0} left={0} right={0} my="auto" />
+                  <Text position="relative" textAlign="center" bg="white" px={2}>
+                    Or set up a new account
+                  </Text>
+                </Center>
                 <HStack
                   as="button"
                   justify="space-between"
@@ -184,8 +177,8 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
                   </HStack>
                   <ArrowRightIcon />
                 </HStack>
-              )}
-            </VStack>
+              </VStack>
+            )}
 
             <Box textAlign="center" pt={8} pb={4}>
               New to Ethereum? Learn more about wallets.
