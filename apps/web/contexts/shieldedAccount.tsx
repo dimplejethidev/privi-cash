@@ -8,8 +8,9 @@ import {
   useEffect,
 } from 'react';
 import { useAccount } from 'wagmi';
-import { useGetShieldedAccount, useGetShieldedBalance } from 'api/account';
+import { useGetShieldedAccount } from 'api/account';
 import { KeyPair } from '@privi-cash/common';
+import { modalViews, useUI } from './ui';
 
 interface State {
   isLoggedIn: boolean;
@@ -29,14 +30,19 @@ ShieldedAccountContext.displayName = 'ShieldedAccountContext';
 
 export const ShieldedAccountProvider: FC<PropsWithChildren> = ({ children }) => {
   const [privateKey, setPrivateKey] = useState<string>('');
-  const { address } = useAccount();
-  // const { data: balance, isFetching: isBalanceFetching } = useGetShieldedBalance(privateKey);
-  const { data: shieldedAccount, isFetching: isAccountFetching } = useGetShieldedAccount();
+  const { address, isConnected } = useAccount();
+  const { setModalViewAndOpen, setModalConfig } = useUI();
+  const { data: shieldedAccount, isLoading } = useGetShieldedAccount({ address });
 
   useEffect(() => {
-    // Log out
-    setPrivateKey('');
-  }, [address]);
+    const isNotLoggedIn = !privateKey;
+
+    if (isConnected && isNotLoggedIn) {
+      setModalConfig({ closeOnOverlayClick: false });
+      setModalViewAndOpen(modalViews.ACCOUNT_LOGIN);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, privateKey]);
 
   const logOut = () => setPrivateKey('');
 
@@ -47,12 +53,11 @@ export const ShieldedAccountProvider: FC<PropsWithChildren> = ({ children }) => 
       privateKey,
       isLoggedIn: !!privateKey,
       keyPair: privateKey ? new KeyPair(privateKey) : undefined,
-      // isLoading: (isBalanceFetching && !balance) || (isAccountFetching && !shieldedAccount),
-      // balance,
+      isLoading,
       address: shieldedAccount?.address,
       isRegistered: shieldedAccount?.isRegistered,
     }),
-    [privateKey, shieldedAccount, setPrivateKey]
+    [privateKey, shieldedAccount, setPrivateKey, isLoading]
   );
 
   return (

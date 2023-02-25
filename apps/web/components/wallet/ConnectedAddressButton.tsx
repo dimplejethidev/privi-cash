@@ -5,25 +5,33 @@ import {
   Circle,
   HStack,
   IconButton,
+  Link,
   Popover,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
   Text,
+  useClipboard,
   VStack,
 } from '@chakra-ui/react';
-import { useAccount } from 'wagmi';
-import { ChevronDownIcon, CopyIcon, LogOutIcon } from 'components/icons';
-import { formatDisplayAddress } from 'privi-utils';
+import { useAccount, useDisconnect } from 'wagmi';
+import { ArrowUpRightIcon, ChevronDownIcon, CopyIcon, LogOutIcon } from 'components/icons';
+import { formatDisplayAddress, getBlockExplorerAddressUrl } from 'privi-utils';
 import { useShieldedAccount } from 'contexts/shieldedAccount';
+import { useInstance } from 'contexts/instance';
 
 const ConnectedAddressButton: FC<ButtonProps> = ({ ...props }) => {
   const { address } = useAccount();
+  const { onCopy } = useClipboard(address || '');
   const { logOut } = useShieldedAccount();
+  const { disconnectAsync } = useDisconnect();
+  const { explorerUrl } = useInstance();
 
-  const handleLogout = () => {
-    logOut();
+  const handleDisconnect = () => {
+    disconnectAsync?.().then(() => logOut());
   };
+
+  const addressLink = getBlockExplorerAddressUrl(address as any, explorerUrl);
 
   return (
     <Popover placement="bottom-start">
@@ -47,22 +55,35 @@ const ConnectedAddressButton: FC<ButtonProps> = ({ ...props }) => {
             </HStack>
             <HStack justify="space-between">
               <Text fontWeight="bold">{formatDisplayAddress(address || '')}</Text>
-              <IconButton
-                variant="ghost"
-                colorScheme="gray"
-                size="sm"
-                icon={<CopyIcon />}
-                aria-label="copy address"
-              />
+              <HStack>
+                <IconButton
+                  variant="ghost"
+                  colorScheme="gray"
+                  size="sm"
+                  icon={<CopyIcon />}
+                  aria-label="copy address"
+                  onClick={() => onCopy()}
+                />
+
+                <Link target="_blank" href={addressLink}>
+                  <IconButton
+                    variant="ghost"
+                    colorScheme="gray"
+                    size="md"
+                    icon={<ArrowUpRightIcon />}
+                    aria-label="copy address"
+                  />
+                </Link>
+              </HStack>
             </HStack>
 
             <Button
               rightIcon={<LogOutIcon />}
               variant="outline"
               colorScheme="red"
-              onClick={handleLogout}
+              onClick={handleDisconnect}
             >
-              Log Out
+              Disconnect
             </Button>
           </VStack>
         </PopoverBody>

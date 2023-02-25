@@ -1,31 +1,18 @@
 import { useRouter } from 'next/router';
-import { Button, Flex, FlexProps, HStack, Text } from '@chakra-ui/react';
-import { AccountRegisterButton } from 'components/account';
+import { Flex, FlexProps, HStack, Text } from '@chakra-ui/react';
 import { APP_NAME, ROUTES } from 'config/constants';
-import { useShieldedAccount } from 'contexts/shieldedAccount';
-import { modalViews, useUI } from 'contexts/ui';
 import Logo from '../Logo';
-import { ConnectedChainButton, ConnectedAddressButton } from 'components/wallet';
+import {
+  ConnectedChainButton,
+  ConnectedAddressButton,
+  ConnectWalletButton,
+} from 'components/wallet';
 import { useAccount } from 'wagmi';
-import { useGetShieldedAccount } from 'api/account';
 
 const Header: React.FC<FlexProps> = ({ ...props }) => {
-  const { setModalViewAndOpen } = useUI();
-  const { isLoggedIn, logOut } = useShieldedAccount();
   const { isConnected } = useAccount();
-  const { data } = useGetShieldedAccount();
 
   const router = useRouter();
-
-  const handleLogIn = () => {
-    if (isLoggedIn) {
-      logOut();
-      return;
-    }
-    setModalViewAndOpen(modalViews.ACCOUNT_LOGIN);
-  };
-
-  const isRegistered = !!data?.isRegistered;
 
   return (
     <Flex px={16} py={4} justify="space-between" {...props}>
@@ -39,23 +26,9 @@ const Header: React.FC<FlexProps> = ({ ...props }) => {
       </HStack>
 
       <HStack spacing={4}>
+        {!isConnected && <ConnectWalletButton />}
         {isConnected && <ConnectedChainButton />}
-
-        {isConnected && !isRegistered && <AccountRegisterButton />}
-
-        {!isLoggedIn && (
-          <Button colorScheme="gray" onClick={handleLogIn}>
-            Log In
-          </Button>
-        )}
-
-        {isConnected && isRegistered && isLoggedIn && <ConnectedAddressButton />}
-
-        {!isConnected && isLoggedIn && (
-          <Button colorScheme="gray" onClick={handleLogIn}>
-            Log Out
-          </Button>
-        )}
+        {isConnected && <ConnectedAddressButton />}
       </HStack>
     </Flex>
   );

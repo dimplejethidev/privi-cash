@@ -1,11 +1,13 @@
 import {
   Box,
   Button,
+  Center,
   Circle,
   Divider,
   Heading,
   HStack,
   Icon,
+  Skeleton,
   Spinner,
   StackProps,
   Text,
@@ -17,10 +19,10 @@ import * as yup from 'yup';
 import { useShieldedAccount } from 'contexts/shieldedAccount';
 import logger from 'utils/logger';
 import { isDev, testShieldedPk1 } from 'config/env';
-import { useUI } from 'contexts/ui';
+import { modalViews, useUI } from 'contexts/ui';
 import { APP_NAME, SIGN_MESSAGE } from 'config/constants';
 import { useSignMessage } from 'wagmi';
-import { ArrowRightIcon, KeyIcon, WalletIcon } from 'components/icons';
+import { ArrowRightIcon, KeyIcon, PlusIcon, WalletIcon } from 'components/icons';
 import { useState } from 'react';
 import { FormTextInput } from 'components/form';
 import { generateKeyPairFromSignature } from 'utils/pool';
@@ -41,7 +43,7 @@ const defaultValues = {
 };
 
 const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
-  const { closeModal } = useUI();
+  const { closeModal, setModalViewAndOpen, setModalData } = useUI();
   const [showLogInForm, setShowLogInForm] = useState(false);
   const { control, handleSubmit } = useForm<ILogInInput>({
     resolver: yupResolver(schema),
@@ -50,13 +52,18 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
   const { isLoading: isSignatureLoading, signMessageAsync } = useSignMessage({
     message: SIGN_MESSAGE,
   });
-  const { logIn } = useShieldedAccount();
+  const { logIn, isLoading, isRegistered } = useShieldedAccount();
 
   const handleWalletLogin = async () => {
     const signature = await signMessageAsync();
     const keyPair = generateKeyPairFromSignature(signature);
     logIn(keyPair.privateKey);
     closeModal();
+  };
+
+  const handleSetUp = () => {
+    setModalData({ promptSignature: true });
+    setModalViewAndOpen(modalViews.ACCOUNT_REGISTER);
   };
 
   const submit = (data: any) => {
@@ -84,7 +91,7 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
   }
 
   return (
-    <VStack alignItems="stretch" spacing={6} py={8} {...props}>
+    <VStack alignItems="stretch" spacing={6} pt={8} {...props}>
       <Heading textAlign="center" fontSize="xl">
         Log in to {APP_NAME}
       </Heading>
@@ -116,7 +123,9 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
                   <Circle bgColor="white" rounded="full" size={8}>
                     <Icon as={WalletIcon} color="blue.400" />
                   </Circle>
-                  <Text fontWeight="bold">Use Wallet</Text>
+                  <VStack>
+                    <Text fontWeight="bold">Use Wallet</Text>
+                  </VStack>
                 </HStack>
                 <ArrowRightIcon />
               </HStack>
@@ -139,9 +148,46 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
                 <ArrowRightIcon />
               </HStack>
             </VStack>
-            <Divider />
 
-            <Box textAlign="center" pt={6}>
+            <VStack alignItems="stretch" textAlign="center" spacing={4}>
+              <Center position="relative">
+                <Divider position="absolute" top={0} bottom={0} left={0} right={0} my="auto" />
+                <Text position="relative" textAlign="center" bg="white" px={2}>
+                  Or set up a new account
+                </Text>
+              </Center>
+
+              {isRegistered && (
+                <Text color="gray.400" fontSize="sm">
+                  Connected wallet already set up. Log In!
+                </Text>
+              )}
+
+              {isLoading && <Skeleton h={10} w="full" rounded="md" />}
+
+              {!isRegistered && !isLoading && (
+                <HStack
+                  as="button"
+                  justify="space-between"
+                  alignItems="center"
+                  rounded="md"
+                  p={4}
+                  bgColor="gray.100"
+                  _hover={{ bgColor: 'gray.200' }}
+                  onClick={handleSetUp}
+                >
+                  <HStack spacing={4}>
+                    <Circle bgColor="white" rounded="full" size={8}>
+                      <Icon as={PlusIcon} color="blue.400" />
+                    </Circle>
+                    <Text fontWeight="bold">Set Up Account</Text>
+                  </HStack>
+                  <ArrowRightIcon />
+                </HStack>
+              )}
+            </VStack>
+
+            <Box textAlign="center" pt={8} pb={4}>
               New to Ethereum? Learn more about wallets.
             </Box>
           </Box>

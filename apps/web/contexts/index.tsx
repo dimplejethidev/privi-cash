@@ -8,13 +8,13 @@ import WalletProvider from './wallet';
 const AppContext: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <WalletProvider>
-      <ShieldedAccountProvider>
-        <InstanceProvider>
-          <RelayJobsProvider>
-            <UIProvider>{children}</UIProvider>
-          </RelayJobsProvider>
-        </InstanceProvider>
-      </ShieldedAccountProvider>
+      <UIProvider>
+        <ShieldedAccountProvider>
+          <InstanceProvider>
+            <RelayJobsProvider>{children}</RelayJobsProvider>
+          </InstanceProvider>
+        </ShieldedAccountProvider>
+      </UIProvider>
     </WalletProvider>
   );
 };

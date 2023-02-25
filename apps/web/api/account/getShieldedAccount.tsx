@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Contract } from 'ethers';
-import { useAccount } from 'wagmi';
 import { useRegistrarContract } from 'hooks/contracts';
 import { KeyPair } from '@privi-cash/common';
 
@@ -16,14 +15,10 @@ export async function getShieldedAccount(address: string, registrar: Contract) {
   };
 }
 
-export const useGetShieldedAccount = (params?: { address?: string }) => {
+export const useGetShieldedAccount = (params: { address?: string }) => {
   const registrar = useRegistrarContract();
-  const { address: connectedAddress } = useAccount();
 
-  let address = params?.address;
-  if (!address) {
-    address = connectedAddress;
-  }
+  const address = params?.address;
 
   return useQuery(['account', address], () => getShieldedAccount(address as string, registrar), {
     enabled: !!address,
