@@ -1,5 +1,11 @@
 import { createContext, FC, PropsWithChildren, useContext, useMemo } from 'react';
-import { chains, defaultChainId, InstanceConfig, instanceConfig } from 'config/network';
+import {
+  blockExplorers,
+  chains,
+  defaultChainId,
+  InstanceConfig,
+  instanceConfig,
+} from 'config/network';
 import { useNetwork } from 'wagmi';
 
 const supportedChains = Object.values(chains);
@@ -30,7 +36,9 @@ export const InstanceProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const config = instanceConfig[chainId];
     const token = Object.keys(config.instances)[0];
-    return { ...config, instance: config.instances[token], chainId, getInstance };
+    const explorerUrl = blockExplorers[chainId];
+
+    return { ...config, instance: config.instances[token], chainId, getInstance, explorerUrl };
   }, [chain]);
 
   return <InstanceContext.Provider value={value}>{children}</InstanceContext.Provider>;
