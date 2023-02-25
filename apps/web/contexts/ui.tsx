@@ -1,3 +1,4 @@
+import { ModalProps } from '@chakra-ui/react';
 import React, {
   useReducer,
   useMemo,
@@ -7,10 +8,13 @@ import React, {
   PropsWithChildren,
 } from 'react';
 
+type ModalConfig = Partial<ModalProps>;
+
 interface State {
   modalView: string;
   isModalOpen: boolean;
   modalData: any;
+  modalConfig: ModalConfig;
 }
 
 export const modalViews = {
@@ -34,12 +38,17 @@ type Action =
   | {
       type: 'SET_MODAL_DATA';
       data: any;
+    }
+  | {
+      type: 'SET_MODAL_CONFIG';
+      config: ModalConfig;
     };
 
 const initialState: State = {
   modalView: '',
   isModalOpen: false,
   modalData: null,
+  modalConfig: {},
 };
 
 export const UIContext = createContext<State | any>(initialState);
@@ -55,6 +64,8 @@ const uiReducer = (state: State, action: Action) => {
       return { ...state, isModalOpen: false };
     case 'SET_MODAL_DATA':
       return { ...state, modalData: action.data };
+    case 'SET_MODAL_CONFIG':
+      return { ...state, modalConfig: action.config };
     default:
       return state;
   }
@@ -64,10 +75,16 @@ export const UIProvider: FC<PropsWithChildren> = (props) => {
   const [state, dispatch] = useReducer(uiReducer, initialState);
 
   const openModal = () => dispatch({ type: 'OPEN_MODAL' });
-  const closeModal = () => dispatch({ type: 'CLOSE_MODAL' });
+  const closeModal = () => {
+    dispatch({ type: 'CLOSE_MODAL' });
+    setModalConfig({});
+  };
   const setModalView = (view: ModalView) => dispatch({ type: 'SET_MODAL_VIEW', view });
   const setModalData = (data: any) => {
     dispatch({ type: 'SET_MODAL_DATA', data });
+  };
+  const setModalConfig = (config: ModalConfig) => {
+    dispatch({ type: 'SET_MODAL_CONFIG', config });
   };
   const setModalViewAndOpen = (view: ModalView) => {
     setModalView(view);
@@ -80,6 +97,7 @@ export const UIProvider: FC<PropsWithChildren> = (props) => {
       openModal,
       closeModal,
       setModalView,
+      setModalConfig,
       setModalData,
       setModalViewAndOpen,
     }),

@@ -4,7 +4,6 @@ import {
   Button,
   ButtonProps,
   Circle,
-  Divider,
   HStack,
   Popover,
   PopoverBody,
@@ -13,21 +12,16 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
-import { ChevronDownIcon, LogOutIcon } from 'components/icons';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { ChevronDownIcon } from 'components/icons';
 
 const ConnectedChainButton: FC<ButtonProps> = ({ ...props }) => {
   const { chain: connectedChain } = useNetwork();
-  const { disconnect } = useDisconnect();
   const { chains, switchNetwork } = useSwitchNetwork();
 
   const handleSwitchNetwork = (id: number) => {
     if (!id) return;
     switchNetwork?.(id);
-  };
-
-  const handleDisconnect = () => {
-    disconnect?.();
   };
 
   return (
@@ -66,17 +60,6 @@ const ConnectedChainButton: FC<ButtonProps> = ({ ...props }) => {
                 )}
               </HStack>
             ))}
-            <VStack alignItems="stretch">
-              <Divider />
-              <Button
-                rightIcon={<LogOutIcon />}
-                variant="ghost"
-                colorScheme="gray"
-                onClick={handleDisconnect}
-              >
-                Disconnect
-              </Button>
-            </VStack>
           </VStack>
         </PopoverBody>
       </PopoverContent>

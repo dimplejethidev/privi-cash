@@ -44,7 +44,7 @@
     "hardhat-deploy": "^0.11.22",
     "hardhat-gas-reporter": "^1.0.8",
     "prettier": "^2.7.1",
-    "privi-utils": "https://github.com/privi-gg/privi-utils.git#main",
+    "privi-utils": "https://github.com/privi-gg/privi-utils.git#77e45aee0d65703b735f798d2ee0210085470f36",
     "solidity-coverage": "^0.8.0",
     "ts-node": ">=8.0.0",
     "typechain": "^8.1.0",
