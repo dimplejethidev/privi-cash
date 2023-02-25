@@ -89,7 +89,7 @@ const FormWithdrawAmountInput: FC<FormWithdrawAmountInputProps> = ({
       <HStack justify="space-between" alignItems="center" pt={2} px={4}>
         <FormLabel fontWeight="semibold">{label}</FormLabel>
         <Text color="gray.500" fontSize="sm">
-          {`Balance: ${balance} ${instance.token.symbol}`}
+          {`Shielded Balance: ${balance} ${instance.token.symbol}`}
         </Text>
       </HStack>
 

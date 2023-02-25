@@ -87,7 +87,7 @@ const FormDepositAmountInput: FC<FormAmountInputProps> = ({
       <HStack justify="space-between" alignItems="center" pt={2} px={4}>
         <FormLabel fontWeight="semibold">{label}</FormLabel>
         <Text color="gray.500" fontSize="sm">
-          {`Balance: ${balance} ${instance.token.symbol}`}
+          {`Wallet Balance: ${balance} ${instance.token.symbol}`}
         </Text>
       </HStack>
 

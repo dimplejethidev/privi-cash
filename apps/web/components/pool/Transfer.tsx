@@ -45,7 +45,7 @@ const Transfer: FC<StackProps> = ({ ...props }) => {
   } = useRelayTransfer({ poolAddress: instance?.pool });
   const { control, handleSubmit, setValue, getValues, watch } = useForm<ITransferInput>({
     resolver: yupResolver(schema),
-    defaultValues: { amount: 0.01, recipient: address },
+    defaultValues: { amount: 0.01 },
   });
   const { saveJob } = useRelayers();
 
