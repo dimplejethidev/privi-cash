@@ -7,9 +7,12 @@ export const TREE_HEIGHT = 20;
 
 export const ROUTES = {
   HOME: '/',
-  DEPOSIT: '/deposit',
-  WITHDRAW: '/withdraw',
-  TRANSFER: '/transfer',
 };
 
 export const RELAYER_URL = 'https://relayer.privi.org';
+
+export const socialLinks = {
+  about: 'https://privi.cash',
+  docs: 'https://privi-1.gitbook.io/privi-docs',
+  twitter: 'https://twitter.com/privi_cash',
+};
