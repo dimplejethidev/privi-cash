@@ -17,10 +17,13 @@ const Header: React.FC<FlexProps> = ({ ...props }) => {
   return (
     <Flex px={16} py={4} justify="space-between" {...props}>
       <HStack spacing={4}>
-        <HStack spacing={4} onClick={() => router.push(ROUTES.HOME)} cursor="pointer">
+        <HStack onClick={() => router.push(ROUTES.HOME)} cursor="pointer">
           <Logo />
-          <Text color="primary.500" fontSize="2xl" fontWeight="bold">
+          <Text color="primary.500" fontSize="2xl" fontWeight="bold" pl={2}>
             {APP_NAME}
+          </Text>
+          <Text fontSize="sm" rounded="md" bgColor="gray.100" color="gray.500" px={1}>
+            BETA
           </Text>
         </HStack>
       </HStack>
