@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha -r ts-node/register ./**/*.test.ts",
-    "postinstall": "yarn build"
+    "postinstall": "pnpm run build"
   },
   "keywords": [],
   "author": "",
