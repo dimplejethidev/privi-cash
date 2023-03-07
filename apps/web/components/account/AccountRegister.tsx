@@ -6,19 +6,20 @@ import {
   Divider,
   Heading,
   HStack,
+  IconButton,
   StackProps,
   Text,
   useClipboard,
   VStack,
 } from '@chakra-ui/react';
 import { useRegisterAccount } from 'api/account';
-import { CopyIcon, DownloadIcon } from 'components/icons';
+import { CloseIcon, CopyIcon, DownloadIcon } from 'components/icons';
 import { APP_NAME, SIGN_MESSAGE } from 'config/constants';
 import { useUI } from 'contexts/ui';
 import { downloadTextFile } from 'utils/file';
 import logger from 'utils/logger';
 import { generateKeyPairFromSignature } from 'utils/pool';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import { useShieldedAccount } from 'contexts/shieldedAccount';
 import { KeyPair } from '@privi-cash/common';
 
@@ -40,6 +41,7 @@ const AccountRegister: FC<StackProps> = ({ ...props }) => {
     isSuccess: isRegisterSuccess,
     writeAsync: register,
   } = useRegisterAccount();
+  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     if (isRegisterSuccess) {
@@ -68,6 +70,11 @@ const AccountRegister: FC<StackProps> = ({ ...props }) => {
     setPrivateKey(keyPair.privateKey);
   };
 
+  const handleClose = () => {
+    disconnect?.();
+    closeModal();
+  };
+
   const downloadKey = () => {
     if (!privateKey) return;
     try {
@@ -81,9 +88,19 @@ const AccountRegister: FC<StackProps> = ({ ...props }) => {
   if (!privateKey) {
     return (
       <VStack alignItems="stretch" spacing={6} py={8} {...props}>
-        <Heading textAlign="center" fontSize="xl">
-          Generate Shielded Private Key
-        </Heading>
+        <HStack justify="space-between" pr={2}>
+          <Box w={6} />
+          <Heading textAlign="center" fontSize="xl">
+            Generate Shielded Private Key
+          </Heading>
+          <IconButton
+            variant="ghost"
+            colorScheme="gray"
+            icon={<CloseIcon size={22} />}
+            aria-label="close"
+            onClick={handleClose}
+          />
+        </HStack>
 
         <Divider />
 
@@ -118,9 +135,19 @@ const AccountRegister: FC<StackProps> = ({ ...props }) => {
 
   return (
     <VStack alignItems="stretch" spacing={6} py={8} {...props}>
-      <Heading textAlign="center" fontSize="xl">
-        Back up Shielded Private Key
-      </Heading>
+      <HStack justify="space-between" pr={2}>
+        <Box w={6} />
+        <Heading textAlign="center" fontSize="xl">
+          Back up Shielded Private Key
+        </Heading>
+        <IconButton
+          variant="ghost"
+          colorScheme="gray"
+          icon={<CloseIcon size={22} />}
+          aria-label="close"
+          onClick={handleClose}
+        />
+      </HStack>
       <Divider />
 
       <Box px={8}>

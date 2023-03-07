@@ -7,6 +7,7 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Skeleton,
   Spinner,
   StackProps,
@@ -21,8 +22,15 @@ import logger from 'utils/logger';
 import { isDev, testShieldedPk1 } from 'config/env';
 import { modalViews, useUI } from 'contexts/ui';
 import { APP_NAME, SIGN_MESSAGE } from 'config/constants';
-import { useSignMessage } from 'wagmi';
-import { ArrowRightIcon, KeyIcon, PlusIcon, WalletIcon } from 'components/icons';
+import { useDisconnect, useSignMessage } from 'wagmi';
+import {
+  ArrowRightIcon,
+  CloseIcon,
+  CrossIcon,
+  KeyIcon,
+  PlusIcon,
+  WalletIcon,
+} from 'components/icons';
 import { useState } from 'react';
 import { FormTextInput } from 'components/form';
 import { generateKeyPairFromSignature } from 'utils/pool';
@@ -53,6 +61,7 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
     message: SIGN_MESSAGE,
   });
   const { logIn, isLoading, isRegistered } = useShieldedAccount();
+  const { disconnect } = useDisconnect();
 
   const handleWalletLogin = async () => {
     const signature = await signMessageAsync();
@@ -64,6 +73,11 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
   const handleSetUp = () => {
     setModalData({ promptSignature: true });
     setModalViewAndOpen(modalViews.ACCOUNT_REGISTER);
+  };
+
+  const handleClose = () => {
+    disconnect?.();
+    closeModal();
   };
 
   const submit = (data: any) => {
@@ -91,10 +105,21 @@ const AccountLogIn: React.FC<StackProps> = ({ ...props }) => {
   }
 
   return (
-    <VStack alignItems="stretch" spacing={6} pt={8} {...props}>
-      <Heading textAlign="center" fontSize="xl">
-        Log in to {APP_NAME}
-      </Heading>
+    <VStack alignItems="stretch" spacing={6} pt={6} {...props}>
+      <HStack justify="space-between" pr={2}>
+        <Box w={6} />
+        <Heading textAlign="center" fontSize="xl">
+          Log in to {APP_NAME}
+        </Heading>
+        <IconButton
+          variant="ghost"
+          colorScheme="gray"
+          icon={<CloseIcon size={22} />}
+          aria-label="close"
+          onClick={handleClose}
+        />
+      </HStack>
+
       <Divider />
 
       <Box py={4} px={8}>
