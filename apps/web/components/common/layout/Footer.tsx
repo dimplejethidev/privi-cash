@@ -16,6 +16,13 @@ const Footer: React.FC<StackProps> = ({ ...props }) => {
             <ArrowUpRightIcon />
           </HStack>
         </Link>
+        <Text>·</Text>
+        <Link href={socialLinks.feedback} target="_blank">
+          <HStack>
+            <Text>Feedback</Text>
+            <ArrowUpRightIcon />
+          </HStack>
+        </Link>
       </HStack>
       <Link href={socialLinks.twitter} target="_blank">
         <Icon as={TwitterIcon} color="gray.500" boxSize={6} />
