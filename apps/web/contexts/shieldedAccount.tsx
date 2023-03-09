@@ -7,7 +7,7 @@ import {
   useContext,
   useEffect,
 } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { useGetShieldedAccount } from 'api/account';
 import { KeyPair } from '@privi-cash/common';
 import { modalViews, useUI } from './ui';
@@ -31,18 +31,25 @@ ShieldedAccountContext.displayName = 'ShieldedAccountContext';
 export const ShieldedAccountProvider: FC<PropsWithChildren> = ({ children }) => {
   const [privateKey, setPrivateKey] = useState<string>('');
   const { address, isConnected } = useAccount();
-  const { setModalViewAndOpen, setModalConfig } = useUI();
+  const { setModalViewAndOpen, setModalConfig, closeModal } = useUI();
   const { data: shieldedAccount, isLoading } = useGetShieldedAccount({ address });
+  const { chain } = useNetwork();
 
   useEffect(() => {
-    const isNotLoggedIn = !privateKey;
+    const isLoggedIn = !!privateKey;
+    const isSupportedChain = chain?.unsupported === false;
 
-    if (isConnected && isNotLoggedIn) {
+    if (isConnected && !isSupportedChain) {
+      setModalConfig({ closeOnOverlayClick: false });
+      setModalViewAndOpen(modalViews.NETWORK_SWITCH);
+    } else if (isConnected && !isLoggedIn) {
       setModalConfig({ closeOnOverlayClick: false });
       setModalViewAndOpen(modalViews.ACCOUNT_LOGIN);
+    } else {
+      closeModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, privateKey]);
+  }, [isConnected, privateKey, chain?.unsupported]);
 
   const logOut = () => setPrivateKey('');
 

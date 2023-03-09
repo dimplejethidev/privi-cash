@@ -20,6 +20,7 @@ interface State {
 export const modalViews = {
   ACCOUNT_REGISTER: 'ACCOUNT_REGISTER',
   ACCOUNT_LOGIN: 'ACCOUNT_LOGIN',
+  NETWORK_SWITCH: 'NETWORK_SWITCH',
 };
 
 type ModalView = keyof typeof modalViews;
