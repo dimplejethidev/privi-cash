@@ -16,7 +16,7 @@ const chiadoChain: Chain = {
   network: 'chiado',
   rpcUrls: { default: { http: [rpcGnosisChiado] } },
   testnet: true,
-  nativeCurrency: { name: 'dai', symbol: 'dai', decimals: 18 },
+  nativeCurrency: { name: 'xDai', symbol: 'xdai', decimals: 18 },
 };
 
 const defaultChains: Chain[] = [

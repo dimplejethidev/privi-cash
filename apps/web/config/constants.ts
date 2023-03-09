@@ -15,4 +15,5 @@ export const socialLinks = {
   about: 'https://privi.cash',
   docs: 'https://privi-1.gitbook.io/privi-docs',
   twitter: 'https://twitter.com/privi_cash',
+  feedback: 'https://forms.gle/tJaSmDcYvN4gQeVd9',
 };

@@ -41,6 +41,7 @@ const ConnectedChainButton: FC<ButtonProps> = ({ ...props }) => {
           <VStack alignItems="stretch" spacing={1} p={0}>
             {chains?.map((chain: any) => (
               <HStack
+                key={`${chain?.id}`}
                 w="full"
                 p={2}
                 rounded="md"
