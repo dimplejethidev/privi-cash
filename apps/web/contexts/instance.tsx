@@ -1,14 +1,8 @@
 import { createContext, FC, PropsWithChildren, useContext, useMemo } from 'react';
-import {
-  blockExplorers,
-  chains,
-  defaultChainId,
-  InstanceConfig,
-  instanceConfig,
-} from 'config/network';
+import { blockExplorers, defaultChainId, InstanceConfig, instanceConfig } from 'config/network';
 import { useNetwork } from 'wagmi';
 
-const supportedChains = Object.values(chains);
+const supportedChains = Object.keys(instanceConfig).map((id) => parseInt(id));
 
 interface State {}
 
