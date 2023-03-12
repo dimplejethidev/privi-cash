@@ -120,11 +120,11 @@ const polygonMumbaiConfig: InstanceConfig = {
 // #####################################
 const goerliConfig: InstanceConfig = {
   rpcUrl: rpcGoerli,
-  wTokenGateway: '0xb91682AB65Fb9e70cD619BFFd8FB045020Fb6de0',
+  wTokenGateway: '0x92D0A9283028aE4d4B2AAff79add531CA20fE40E',
   registrar: '0x930677540ab430420055528D7d952B502A3d109b',
   instances: {
     eth: {
-      pool: '0x80Ca34172fFA772Bc22E7C92E8e0aa5098E02216',
+      pool: '0x986BEe188e81B0413DAbbC6D31C5d547Dd5431Cd',
       deployedBlock: 28876158,
       treeHeight: 20,
       zeroElement: ZERO_LEAF,
@@ -138,7 +138,7 @@ const goerliConfig: InstanceConfig = {
       },
     },
     weth: {
-      pool: '0x80Ca34172fFA772Bc22E7C92E8e0aa5098E02216',
+      pool: '0x986BEe188e81B0413DAbbC6D31C5d547Dd5431Cd',
       deployedBlock: 28876158,
       treeHeight: 20,
       zeroElement: ZERO_LEAF,
