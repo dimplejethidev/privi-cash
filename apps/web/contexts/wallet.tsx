@@ -3,7 +3,7 @@ import { getDefaultWallets, lightTheme, RainbowKitProvider, Chain } from '@rainb
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { goerli, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { publicProvider } from 'wagmi/providers/public';
 import { keyAlchemyGoerli, keyAlchemyPolygonMumbai, rpcGnosisChiado } from 'config/env';
 import { APP_NAME } from 'config/constants';
 import fonts from 'theme/fonts';
@@ -26,7 +26,7 @@ const defaultChains: Chain[] = [
 ];
 
 const { chains, provider } = configureChains(defaultChains, [
-  jsonRpcProvider({ rpc: () => ({ http: rpcGnosisChiado }) }),
+  publicProvider(),
   alchemyProvider({ apiKey: keyAlchemyPolygonMumbai }),
   alchemyProvider({ apiKey: keyAlchemyGoerli }),
 ]);
